@@ -1,0 +1,46 @@
+# Which filesystem?
+filesystem "/";
+
+# Seach chunk tree.
+k = key(0, BTRFS_CHUNK_ITEM_KEY, 0, 0);
+chunks = search(BTRFS_CHUNK_TREE_OBJECTID, k);
+
+# Debug device and first chunk.
+# len(chunks);
+# print chunks[0];
+# print chunks[1];
+
+i=0;
+sum=0;
+
+# Iterate over chunks.
+for c in chunks {
+  type="";
+
+  # Determine type name.
+  if (c.type == 0) {
+    type = "DEVICE";
+  }
+  if (c.type == 1) {
+    type = "DATA";
+  }
+  if (c.type == 2) {
+    type = "SYSTEM";
+  }
+  if (c.type == 4) {
+    type = "METADATA";
+  }
+
+  # Print size.
+  if (c.type == 0) {
+    print("Type = " + type + ", Size = " + str(c.total_bytes/1024/1024) + " MB" + ", Used = " + str(c.bytes_used/1024/1024) + "MB");
+  } else {
+    print("Type = " + type + ", Size = " + str(c.length/1024/1024) + " MB");
+    sum+=c.length;
+    i+=1;
+  }
+}
+
+# Print summary.
+print("\nChunks = " + str(i));
+print("Size   = " + str(sum/1024/1024) + " MB (" + str(sum/1024/1024/1024) + " GB).");
