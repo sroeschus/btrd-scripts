@@ -1,0 +1,5 @@
+filesystem "/";
+k = key(0, BTRFS_CHUNK_ITEM_KEY, 0, 0);
+bgs = search(BTRFS_CHUNK_TREE_OBJECTID, k);
+len(bgs);
+print bgs[0];
